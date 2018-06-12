@@ -1,3 +1,4 @@
+//conecta o banco de dados
 package fatec.poo.control;
 
 import java.sql.DriverManager;
