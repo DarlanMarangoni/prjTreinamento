@@ -5,12 +5,20 @@
  */
 package fatec.poo.view;
 
+import fatec.poo.control.Conexao;
+import fatec.poo.control.DaoCurso;
+import fatec.poo.model.Curso;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author felipeiise
  */
 public class guiCurso extends javax.swing.JFrame {
 
+    private Conexao conexao = null;
+    private DaoCurso daoCurso = null;
+    private Curso curso = null;
     /**
      * Creates new form guiCurso
      */
@@ -49,6 +57,14 @@ public class guiCurso extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Cadastrar Curso");
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosed(java.awt.event.WindowEvent evt) {
+                formWindowClosed(evt);
+            }
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
+            }
+        });
 
         jLabel1.setText("Sigla curso");
 
@@ -79,20 +95,36 @@ public class guiCurso extends javax.swing.JFrame {
         } catch (java.text.ParseException ex) {
             ex.printStackTrace();
         }
+        txtData.setText("");
         txtData.setToolTipText("");
         txtData.setEnabled(false);
 
         btnConsultar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/fatec/poo/view/icon/pesq.png"))); // NOI18N
         btnConsultar.setText("Consultar");
+        btnConsultar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnConsultarActionPerformed(evt);
+            }
+        });
 
         btnInserir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/fatec/poo/view/icon/add.png"))); // NOI18N
         btnInserir.setText("Inserir");
         btnInserir.setEnabled(false);
+        btnInserir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnInserirActionPerformed(evt);
+            }
+        });
 
         btnAlterar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/fatec/poo/view/icon/Alterar.png"))); // NOI18N
         btnAlterar.setText("Alterar");
         btnAlterar.setToolTipText("");
         btnAlterar.setEnabled(false);
+        btnAlterar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAlterarActionPerformed(evt);
+            }
+        });
 
         btnExcluir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/fatec/poo/view/icon/Eraser.png"))); // NOI18N
         btnExcluir.setText("Excluir");
@@ -216,12 +248,136 @@ public class guiCurso extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnExcluirActionPerformed
+ if (JOptionPane.showConfirmDialog(null, "Confirma Alteração?") == 0){
+            daoCurso.excluir(curso); 
+            
+            txtSigla.setText("");
+            txtNome.setText("");
+            txtCarga.setText("");
+            txtData.setText("");
+            txtPrograma.setText("");
+            txtValor.setText("");
+            txtValorHora.setText("");
+            txtSigla.setEnabled(true); 
+            txtNome.setEnabled(false);
+            txtSigla.requestFocus();
+            btnConsultar.setEnabled(true);
+            btnInserir.setEnabled(false);
+            btnAlterar.setEnabled(false);
+            btnExcluir.setEnabled(false);
+        }    }//GEN-LAST:event_btnExcluirActionPerformed
 
     private void btnSairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSairActionPerformed
         dispose();
     }//GEN-LAST:event_btnSairActionPerformed
+
+    private void btnInserirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInserirActionPerformed
+        curso = new Curso(txtSigla.getText(), txtNome.getText());
+        curso.setCargaHoraria(Integer.parseInt(txtCarga.getText()));
+        curso.setValor(Double.parseDouble(txtValor.getText()));
+        curso.setValorHoraInstrutor(Double.parseDouble(txtValorHora.getText()));
+        curso.setDataVigencia(txtData.getText());
+        curso.setPrograma(txtPrograma.getText());
+        
+        daoCurso.inserir(curso);
+         
+        txtSigla.setText("");
+        txtNome.setText("");
+        txtCarga.setText("");
+        txtData.setText("");
+        txtPrograma.setText("");
+        txtValor.setText("");
+        txtValorHora.setText("");
+        btnInserir.setEnabled(false);
+        txtSigla.setEnabled(true);
+        txtNome.setEnabled(false);
+        txtSigla.requestFocus();
+        
+        btnConsultar.setEnabled(true);
+        btnInserir.setEnabled(false);
+    }//GEN-LAST:event_btnInserirActionPerformed
+
+    private void btnAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAlterarActionPerformed
+     if (JOptionPane.showConfirmDialog(null, "Confirma Alteração?")== 0){//Sim
+           curso.setNome(txtNome.getText());
+           curso.setCargaHoraria(Integer.parseInt(txtCarga.getText()));
+           curso.setDataVigencia(txtData.getText());
+           curso.setPrograma(txtPrograma.getText());
+           curso.setValor(Double.parseDouble(txtValor.getText()));
+           curso.setValorHoraInstrutor(Double.parseDouble(txtValorHora.getText()));
+           
+           daoCurso.alterar(curso);
+        } 
+        
+        txtSigla.setText("");
+        txtNome.setText("");
+        txtCarga.setText("");
+        txtData.setText("");
+        txtPrograma.setText("");
+        txtValor.setText("");
+        txtValorHora.setText("");
+        txtSigla.setEnabled(true); 
+        txtNome.setEnabled(true);
+        txtSigla.requestFocus();
+        btnConsultar.setEnabled(true);
+        btnInserir.setEnabled(true);
+        btnAlterar.setEnabled(true);
+        btnExcluir.setEnabled(false);    }//GEN-LAST:event_btnAlterarActionPerformed
+
+    private void btnConsultarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConsultarActionPerformed
+       curso = null;
+       curso = daoCurso.consultar(txtSigla.getText());
+       
+       if (curso == null){
+           txtSigla.setEnabled(false);
+           txtNome.setEnabled(true);
+           txtCarga.setEnabled(true);
+           txtData.setEnabled(true);
+           txtPrograma.setEnabled(true);
+           txtValor.setEnabled(true);
+           txtValorHora.setEnabled(true);
+           txtNome.requestFocus();
+           
+           btnConsultar.setEnabled(false);
+           btnInserir.setEnabled(true);
+           btnAlterar.setEnabled(false);
+           btnExcluir.setEnabled(false);
+       }
+       else{
+          txtNome.setText(curso.getNome());
+          txtCarga.setText(Integer.toString(curso.getCargaHoraria()));
+          txtData.setText(curso.getDataVigencia());
+          txtPrograma.setText(curso.getPrograma());
+          txtValor.setText(Double.toString(curso.getValor()));
+          txtValorHora.setText(Double.toString(curso.getValorHoraInstrutor()));
+       
+          txtSigla.setEnabled(false); 
+          txtNome.setEnabled(true);
+          txtData.setEnabled(true);
+          txtCarga.setEnabled(true);
+          txtPrograma.setEnabled(true);
+          txtValor.setEnabled(true);
+          txtValorHora.setEnabled(true);
+          txtNome.requestFocus();
+          
+          btnConsultar.setEnabled(false);
+          btnInserir.setEnabled(false);
+          btnAlterar.setEnabled(true);
+          btnExcluir.setEnabled(true);
+       }   
+    }//GEN-LAST:event_btnConsultarActionPerformed
+
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+       conexao = new Conexao("Darlan","A6w8y2k3");//informando login e senha
+       conexao.setDriver("oracle.jdbc.driver.OracleDriver");//encontrado no arquivo read me do driver
+       conexao.setConnectionString("jdbc:oracle:thin:@localhost:1521:xe");
+       daoCurso = new DaoCurso(conexao.conectar());
+    }//GEN-LAST:event_formWindowOpened
+
+    private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
+        conexao.fecharConexao();
+        dispose();
+    }//GEN-LAST:event_formWindowClosed
 
     /**
      * @param args the command line arguments
@@ -257,6 +413,8 @@ public class guiCurso extends javax.swing.JFrame {
             }
         });
     }
+    
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAlterar;

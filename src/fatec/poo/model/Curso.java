@@ -40,5 +40,45 @@ public class Curso {
     public void addTurma(Turma t){
         turmas.add(t);
     }
+
+    public String getSigla() {
+        return Sigla;
+    }
+
+    public String getNome() {
+        return Nome;
+    }
+
+    public int getCargaHoraria() {
+        return CargaHoraria;
+    }
+
+    public double getValor() {
+        return Valor;
+    }
+
+    public String getDataVigencia() {
+        return DataVigencia;
+    }
+
+    public double getValorHoraInstrutor() {
+        return ValorHoraInstrutor;
+    }
+
+    public String getPrograma() {
+        return Programa;
+    }
+
+    public void setSigla(String Sigla) {
+        this.Sigla = Sigla;
+    }
+
+    public void setNome(String Nome) {
+        this.Nome = Nome;
+    }
+
+    public void setTurmas(ArrayList<Turma> turmas) {
+        this.turmas = turmas;
+    }
     
 }
